@@ -41,9 +41,19 @@ def draw_selection_order(
 
 
 def assign_prizes(
-        prizes: Sequence[Prize],
+        prizes: Collection[Prize],
         preferences: Mapping[Participant, Sequence[Prize]],
         selection_order: Iterable[Participant],
 ) -> Mapping[Participant, Prize]:
 
-    return {}
+    remaining_prizes = list(prizes)
+    results = {}
+
+    for participant in selection_order:
+        for preference in preferences[participant]:
+            if preference in remaining_prizes:
+                remaining_prizes.remove(preference)
+                results[participant] = preference
+                break
+
+    return results
