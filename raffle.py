@@ -14,13 +14,11 @@ def raffle(prizes: Sequence[Prize],
            random_source: random.Random = random.SystemRandom()
            ) -> Mapping[Participant, Prize]:
 
-    hat = list(entries)
-    results = {}
-
-    for prize in prizes:
-        winner = hat.pop()
-        results[winner] = prize
-
+    errors = validate(prizes, entries, preferences)
+    if errors:
+        raise ValueError(errors)
+    selection_order = draw_selection_order(entries, random_source)
+    results = assign_prizes(prizes, preferences, selection_order)
     return results
 
 

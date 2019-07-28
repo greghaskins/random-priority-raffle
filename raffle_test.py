@@ -1,4 +1,5 @@
 import random
+import pytest
 
 import raffle
 
@@ -10,6 +11,46 @@ def test_trivial_case():
 
     results = raffle.raffle(prizes, entries, preferences)
     assert results == {'alice': 'foo'}
+
+
+def test_full_example():
+    prizes = ['foo', 'bar', 'baz']
+    entries = [
+        'alice',
+        'bob',
+        'alice',
+        'carol',
+        'bob',
+        'carol',
+        'alice',
+        'alice',
+    ]
+    preferences = {
+        'alice': ['foo', 'bar', 'baz'],
+        'bob': ['foo', 'baz', 'bar'],
+        'carol': ['baz', 'bar', 'foo']
+    }
+    rnd = random.Random(42)
+
+    assert raffle.raffle(prizes, entries, preferences, rnd) == {
+        'alice': 'bar',
+        'bob': 'foo',
+        'carol': 'baz'
+    }
+
+
+def test_raffle_throws_exception_when_validation_fails():
+    prizes = ['foo', 'baz']
+    entries = ['alice', 'bob', 'carol']
+    preferences = {
+        'alice': ['foo', 'bar'],
+        'bob': ['foo', 'foo', 'foo'],
+    }
+
+    with pytest.raises(ValueError) as exception_info:
+        raffle.raffle(prizes, entries, preferences)
+
+    assert len(exception_info.value.args[0]) == 4
 
 
 def test_selection_order_is_drawn_at_random():
