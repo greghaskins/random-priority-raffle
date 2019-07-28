@@ -30,12 +30,12 @@ def test_full_example():
         'bob': ['foo', 'baz', 'bar'],
         'carol': ['baz', 'bar', 'foo']
     }
-    rnd = random.Random(42)
+    rnd = random.Random("4f917c6e0da")
 
     assert raffle.raffle(prizes, entries, preferences, rnd) == {
-        'alice': 'bar',
-        'bob': 'foo',
-        'carol': 'baz'
+        'alice': 'foo',
+        'bob': 'baz',
+        'carol': 'bar'
     }
 
 
