@@ -1,0 +1,20 @@
+prizes:
+  # Must be enough prizes for each participant to receive one
+  - foo
+  - bar
+  - baz
+entries:
+  # Multiple entries allowed per participant, improving odds of early selection
+  - alice
+  - bob
+  - alice
+  - carol
+  - bob
+  - carol
+  - alice
+  - alice
+preferences:
+  # Sequence of which prizes the participant prefers (most preferred to least preferred)
+  alice: [foo, bar, baz]
+  bob: [foo, baz, bar]
+  carol: [baz, bar, foo]
