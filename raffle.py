@@ -5,6 +5,7 @@ from typing import NewType, Mapping, Collection, Iterable, Sequence
 
 Participant = NewType('Participant', str)
 Prize = NewType('Prize', str)
+Error = NewType('Error', str)
 
 
 def raffle(prizes: Sequence[Prize],
@@ -21,6 +22,31 @@ def raffle(prizes: Sequence[Prize],
         results[winner] = prize
 
     return results
+
+
+def validate(prizes: Sequence[Prize], entries: Collection[Participant],
+             preferences: Mapping[Participant, Sequence[Prize]]
+             ) -> Collection[Error]:
+    errors = []
+    number_of_participants = len(set(entries))
+
+    if len(prizes) < number_of_participants:
+        errors.append(
+            f"not enough prizes for { number_of_participants } participants")
+
+    distinct_prizes = set(prizes)
+    for participant in preferences:
+        for prize in distinct_prizes:
+            if prize not in preferences[participant]:
+                errors.append(
+                    f"'{participant}' does not have prize '{prize}' in preference list"
+                )
+
+    for entry in entries:
+        if entry not in preferences:
+            errors.append(f"missing preferences for entry '{ entry}'")
+
+    return errors
 
 
 def draw_selection_order(

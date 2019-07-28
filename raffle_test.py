@@ -107,4 +107,67 @@ def test_can_have_multiple_copies_of_prizes():
     }
 
 
-## TODO: all the validation: not enough prizes, mismatched preferences, mismatched entries
+def test_validate_returns_error_when_not_enough_prizes_for_participants():
+    preferences = {
+        'alice': ['foo', 'bar', 'baz'],
+        'bob': ['foo', 'bar', 'baz'],
+        'carol': ['foo', 'bar', 'baz'],
+        'dave': ['foo', 'bar', 'baz']
+    }
+
+    assert "not enough prizes for 3 participants" in raffle.validate(
+        prizes=['foo', 'bar'],
+        entries=['alice', 'bob', 'carol'],
+        preferences=preferences)
+    assert "not enough prizes for 4 participants" in raffle.validate(
+        prizes=['foo', 'bar', 'bar'],
+        entries=['alice', 'bob', 'carol', 'dave'],
+        preferences=preferences)
+
+
+def test_validate_only_counts_unique_participants_in_entry_list():
+    preferences = {
+        'alice': ['foo', 'bar', 'baz'],
+        'bob': ['foo', 'bar', 'baz'],
+        'carol': ['foo', 'bar', 'baz'],
+        'dave': ['foo', 'bar', 'baz']
+    }
+
+    assert not raffle.validate(prizes=['foo', 'bar'],
+                               entries=['alice', 'bob', 'bob'],
+                               preferences=preferences)
+    assert not raffle.validate(prizes=['foo', 'bar', 'bar'],
+                               entries=['alice', 'bob', 'bob', 'carol'],
+                               preferences=preferences)
+
+
+def test_preferences_must_include_each_distinct_prize():
+    prizes = ['foo', 'foo', 'bar', 'baz', 'foo']
+    entries = ['alice', 'bob']
+
+    assert "'alice' does not have prize 'baz' in preference list" in raffle.validate(
+        prizes, entries, {
+            'alice': ['foo', 'bar'],
+            'bob': ['foo', 'bar', 'baz']
+        })
+    assert "'bob' does not have prize 'bar' in preference list" in raffle.validate(
+        prizes, entries, {
+            'alice': ['foo', 'bar', 'baz'],
+            'bob': ['foo', 'boo']
+        })
+    assert "'bob' does not have prize 'baz' in preference list" in raffle.validate(
+        prizes, entries, {
+            'alice': ['foo', 'bar', 'baz'],
+            'bob': ['foo']
+        })
+
+
+def test_each_entry_must_have_preferences():
+    prizes = ['foo', 'bar', 'baz']
+    entries = ['alice', 'bob', 'carol']
+
+    assert "missing preferences for entry 'carol'" in raffle.validate(
+        prizes, entries, {
+            'alice': ['foo', 'bar', 'baz'],
+            'bob': ['foo', 'bar', 'baz']
+        })
