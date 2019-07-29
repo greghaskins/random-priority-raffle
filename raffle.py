@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 
 import random
-from typing import NewType, Mapping, Collection, Iterable, Sequence
+from typing import NewType, Mapping, Collection, Iterable, Sequence, NamedTuple
 
 Participant = NewType('Participant', str)
 Prize = NewType('Prize', str)
 Error = NewType('Error', str)
+
+
+class Assignment(NamedTuple):
+    participant: Participant
+    prize: Prize
 
 
 def raffle(prizes: Sequence[Prize],
@@ -68,16 +73,16 @@ def assign_prizes(
         prizes: Collection[Prize],
         preferences: Mapping[Participant, Sequence[Prize]],
         selection_order: Iterable[Participant],
-) -> Mapping[Participant, Prize]:
+) -> Sequence[Assignment]:
 
     remaining_prizes = list(prizes)
-    results = {}
+    results = []
 
     for participant in selection_order:
         for preference in preferences[participant]:
             if preference in remaining_prizes:
                 remaining_prizes.remove(preference)
-                results[participant] = preference
+                results.append(Assignment(participant, preference))
                 break
 
     return results

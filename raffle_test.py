@@ -10,7 +10,7 @@ def test_trivial_case():
     preferences = {'alice': ['foo']}
 
     results = raffle.raffle(prizes, entries, preferences)
-    assert results == {'alice': 'foo'}
+    assert results == [('alice', 'foo')]
 
 
 def test_full_example():
@@ -32,11 +32,11 @@ def test_full_example():
     }
     rnd = random.Random("4f917c6e0da")
 
-    assert raffle.raffle(prizes, entries, preferences, rnd) == {
-        'alice': 'foo',
-        'bob': 'baz',
-        'carol': 'bar'
-    }
+    assert raffle.raffle(prizes, entries, preferences, rnd) == [
+        ('alice', 'foo'),
+        ('bob', 'baz'),
+        ('carol', 'bar'),
+    ]
 
 
 def test_raffle_throws_exception_when_validation_fails():
@@ -88,16 +88,16 @@ def test_prize_assignments_with_uniform_preferences():
     }
 
     assign = raffle.assign_prizes
-    assert assign(prizes, preferences, ['alice', 'bob', 'carol']) == {
-        'alice': 'foo',
-        'bob': 'bar',
-        'carol': 'baz'
-    }
-    assert assign(prizes, preferences, ['bob', 'carol', 'alice']) == {
-        'alice': 'baz',
-        'bob': 'foo',
-        'carol': 'bar'
-    }
+    assert assign(prizes, preferences, ['alice', 'bob', 'carol']) == [
+        ('alice', 'foo'),
+        ('bob', 'bar'),
+        ('carol', 'baz'),
+    ]
+    assert assign(prizes, preferences, ['bob', 'carol', 'alice']) == [
+        ('bob', 'foo'),
+        ('carol', 'bar'),
+        ('alice', 'baz'),
+    ]
 
 
 def test_prize_assignments_based_on_preferences():
@@ -110,21 +110,21 @@ def test_prize_assignments_based_on_preferences():
             'alice': ['baz', 'foo', 'bar'],
             'bob': ['bar', 'foo', 'baz'],
             'carol': ['foo', 'bar', 'baz']
-        }, selection_order) == {
-            'alice': 'baz',
-            'bob': 'bar',
-            'carol': 'foo'
-        }
+        }, selection_order) == [
+            ('alice', 'baz'),
+            ('bob', 'bar'),
+            ('carol', 'foo'),
+        ]
     assert assign(
         prizes, {
             'alice': ['baz', 'foo', 'bar'],
             'bob': ['baz', 'foo', 'baz'],
             'carol': ['foo', 'bar', 'baz']
-        }, selection_order) == {
-            'alice': 'baz',
-            'bob': 'foo',
-            'carol': 'bar'
-        }
+        }, selection_order) == [
+            ('alice', 'baz'),
+            ('bob', 'foo'),
+            ('carol', 'bar'),
+        ]
 
 
 def test_can_have_multiple_copies_of_prizes():
@@ -136,16 +136,16 @@ def test_can_have_multiple_copies_of_prizes():
     }
 
     assign = raffle.assign_prizes
-    assert assign(prizes, preferences, ['alice', 'bob', 'carol']) == {
-        'alice': 'foo',
-        'bob': 'foo',
-        'carol': 'bar'
-    }
-    assert assign(prizes, preferences, ['carol', 'bob', 'alice']) == {
-        'alice': 'bar',
-        'bob': 'foo',
-        'carol': 'foo'
-    }
+    assert assign(prizes, preferences, ['alice', 'bob', 'carol']) == [
+        ('alice', 'foo'),
+        ('bob', 'foo'),
+        ('carol', 'bar'),
+    ]
+    assert assign(prizes, preferences, ['carol', 'bob', 'alice']) == [
+        ('carol', 'foo'),
+        ('bob', 'foo'),
+        ('alice', 'bar'),
+    ]
 
 
 def test_validate_returns_error_when_not_enough_prizes_for_participants():

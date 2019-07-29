@@ -58,5 +58,5 @@ pprint(configuration)
 results = raffle.raffle(prizes, entries, preferences, random_source)
 print("=" * 78)
 print("Results:\n")
-for participant in sorted(results):
-    print(f"{participant} -> {results[participant]}")
+for i, (participant, prize) in enumerate(results):
+    print(f"{i + 1}: {participant} -> {prize}")
