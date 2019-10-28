@@ -56,7 +56,14 @@ print("Running raffle with configuration:")
 pprint(configuration)
 
 results = raffle.raffle(prizes, entries, preferences, random_source)
+
+leftover_prizes = list(prizes)
 print("=" * 78)
 print("Results:\n")
 for i, (participant, prize) in enumerate(results):
     print(f"{i + 1}: {participant} -> {prize}")
+    leftover_prizes.remove(prize)
+
+print("=" * 78)
+print("Leftover prizes:\n")
+pprint(leftover_prizes)

@@ -17,7 +17,7 @@ def raffle(prizes: Sequence[Prize],
            entries: Collection[Participant],
            preferences: Mapping[Participant, Sequence[Prize]],
            random_source: random.Random = random.SystemRandom()
-           ) -> Mapping[Participant, Prize]:
+           ) -> Sequence[Assignment]:
 
     errors = validate(prizes, entries, preferences)
     if errors:
