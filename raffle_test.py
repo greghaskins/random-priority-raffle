@@ -34,8 +34,8 @@ def test_full_example():
 
     assert raffle.raffle(prizes, entries, preferences, rnd) == [
         ('alice', 'foo'),
-        ('bob', 'baz'),
-        ('carol', 'bar'),
+        ('carol', 'baz'),
+        ('bob', 'bar'),
     ]
 
 
@@ -60,6 +60,17 @@ def test_selection_order_is_drawn_at_random():
     assert draw(entries, random.Random(4)) == ['alice', 'carol', 'bob']
     assert draw(entries, random.Random(999)) == ['carol', 'alice', 'bob']
     assert draw(entries, random.Random(-8675309)) == ['bob', 'alice', 'carol']
+
+
+def test_selection_order_is_independent_of_input_order():
+    entries1 = ['alice', 'bob', 'carol']
+    entries2 = ['carol', 'alice', 'bob']
+    entries3 = ['bob', 'carol', 'alice']
+
+    draw = raffle.draw_selection_order
+    assert draw(entries1, random.Random(-8675309)) == ['bob', 'alice', 'carol']
+    assert draw(entries2, random.Random(-8675309)) == ['bob', 'alice', 'carol']
+    assert draw(entries3, random.Random(-8675309)) == ['bob', 'alice', 'carol']
 
 
 def test_selection_order_only_includes_each_participant_once():

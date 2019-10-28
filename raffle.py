@@ -58,7 +58,7 @@ def draw_selection_order(
 ) -> Iterable[Participant]:
 
     selection_order = []
-    hat = list(entries)
+    hat = sorted(entries)
 
     while hat:
         random_index = random_source.randrange(len(hat))
